@@ -1,28 +1,33 @@
 #include <iostream>
 #include <fstream>
+#include <set>
 
 int main() {
     int a = 1;
-    int b = 99 * 99;
+    int b = 999 * 999;
 
     std::cout << (static_cast<float>(a) / static_cast<float> (b)) << "\n";
 
     std::ofstream file_stream;
     file_stream.open("1_81.txt");
 
-
     bool has_decimal = false;
+    std::set<int> remainders = {}; 
 
     int i = 0;
-    int max_iters = 1'000;
-
-    while ((a != 0) and (i < max_iters)) {
+    while (a != 0) {
         if (has_decimal) {
             a *= 10;
         }
 
         int c = a / b;
         a -= c * b;
+
+        if (remainders.count(a) == 1) {
+            // Repeating decimal.
+            std::cout << "\n" << "Found repeating decimal.";
+            break;
+        }
 
         if ((c == 0) and (!has_decimal)) {
             if (i == 0) {
@@ -38,6 +43,8 @@ int main() {
 
         std::cout << c;
         file_stream << c;
+
+        remainders.insert(a);
 
         i++;
     }
